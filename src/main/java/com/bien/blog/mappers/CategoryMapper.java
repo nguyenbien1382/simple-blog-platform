@@ -2,6 +2,7 @@ package com.bien.blog.mappers;
 
 import com.bien.blog.domain.PostStatus;
 import com.bien.blog.domain.dtos.CategoryDto;
+import com.bien.blog.domain.dtos.CreateCategoryRequest;
 import com.bien.blog.domain.entities.Category;
 import com.bien.blog.domain.entities.Post;
 import org.mapstruct.Mapper;
@@ -17,12 +18,13 @@ public interface CategoryMapper {
     @Mapping(target = "postCount",source="posts", qualifiedByName ="calculatePostCount" )
     CategoryDto toDto(Category category);
 
+    Category toEntity(CreateCategoryRequest createCategoryRequest);
+
     @Named("calculatePostCount")
     default long calculatePostCount(List<Post> posts){
         if (null == posts) {
             return 0;
         }
-
         return posts.stream()
                 .filter(post -> PostStatus.PUBLISHED.equals(post.getStatus()))
                 .count();
